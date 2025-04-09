@@ -129,6 +129,16 @@ def upload_database(db_file):
         # Get all tables in the database
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
         tables = [table[0] for table in cursor.fetchall()]
+        
+        # Check for common tables to guess database type
+        if 'tracks' in tables and 'albums' in tables and 'artists' in tables:
+            db_type = "music"
+        elif 'orders' in tables and 'customers' in tables and 'products' in tables:
+            db_type = "retail"
+        elif 'employees' in tables and 'departments' in tables:
+            db_type = "hr"
+        else:
+            db_type = "generic"
             
         conn.close()
     except:
